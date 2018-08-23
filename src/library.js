@@ -12,4 +12,4 @@ const changeAbs=(insertPath)=>{
         return pathAbs
     }
 }
-changeAbs('README.md');
+changeAbs('../README.md');
