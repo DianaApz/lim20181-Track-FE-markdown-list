@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list/issues"
   },
-  "homepage": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list#readme"
+  "homepage": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list#readme",
+  "bin": {
+    "mdLinks": "library.js"
+  }
 }
