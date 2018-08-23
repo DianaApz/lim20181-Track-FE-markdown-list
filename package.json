@@ -1,0 +1,22 @@
+{
+  "name": "lim20181-track-fe-markdown-list",
+  "version": "1.0.0",
+  "description": "markdown",
+  "main": "index.js",
+  "scripts": {
+    "test": "mdlink"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DianaApz/lim20181-Track-FE-markdown-list.git"
+  },
+  "keywords": [
+    "mdLinks"
+  ],
+  "author": "Diana Apz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list/issues"
+  },
+  "homepage": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list#readme"
+}
