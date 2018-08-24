@@ -2,9 +2,9 @@
   "name": "lim20181-track-fe-markdown-list",
   "version": "1.0.0",
   "description": "markdown",
-  "main": "index.js",
+  "main": "library.js",
   "scripts": {
-    "test": "mdlink"
+    "test": "library"
   },
   "repository": {
     "type": "git",
