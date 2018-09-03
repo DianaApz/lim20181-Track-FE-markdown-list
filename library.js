@@ -45,7 +45,25 @@ const fileOrDir=(insertPath)=>{
         }
    });
 }
-
+const readFile =(filemd,ar)=>new Promise((resolve,reject)=>{
+    ar=ar || [];
+    const read=util.promisify(fs.readFile);
+    read(filemd).then(content=>{
+        let string= content.toString();
+        let arrlink=parser.parse(string, (err, result)=> {
+            // console.log(result.references)
+            let all=result.references;
+            all.forEach((obj)=>{
+               ar.push({
+                  href:obj.href,
+                  text:obj.title,
+                  file:filemd
+                })
+            })
+            resolve(ar);
+        })
+    })
+});
 
 let answer=fileOrDir(args[0]);
 // console.log(answer);
