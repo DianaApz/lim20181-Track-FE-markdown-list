@@ -21,5 +21,9 @@
   "homepage": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list#readme",
   "bin": {
     "mdLinks": "library.js"
+  },
+  "dependencies": {
+    "markdown-parser": "0.0.8",
+    "node-fetch": "^2.2.0"
   }
 }
