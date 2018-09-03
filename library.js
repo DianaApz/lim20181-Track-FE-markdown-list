@@ -14,6 +14,20 @@ const changeAbs=(insertPath)=>{
         return pathAbs
     }
 }
+const readDir = (dir,arrFile)=>{
+    let  files = fs.readdirSync(dir);
+    arrFile = arrFile || [];
+   files.forEach((file)=>{
+       const ext=path.extname(file);
+       if (fs.statSync(path.resolve(dir, file)).isDirectory()) {
+           arrFile = readDir(path.resolve(dir, file), arrFile);
+        }
+        else if(ext==='.md'){
+           arrFile.push(path.resolve(dir, file));
+        }
+   });
+  return arrFile;
+};
 const fileOrDir=(insertPath)=>{
     const change= changeAbs(insertPath);
     fs.lstat(change, (err, stats) =>{
