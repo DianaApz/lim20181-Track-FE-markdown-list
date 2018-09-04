@@ -11,7 +11,7 @@
     "url": "git+https://github.com/DianaApz/lim20181-Track-FE-markdown-list.git"
   },
   "keywords": [
-    "mdLinks"
+    "md-links"
   ],
   "author": "Diana Apz",
   "license": "ISC",
@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list#readme",
   "bin": {
-    "mdLinks": "library.js"
+    "md-links": "library.js"
   },
   "dependencies": {
-    "markdown-parser": "0.0.8",
+    "markdown-parser": "0.0.8",   
     "node-fetch": "^2.2.0"
   }
 }
