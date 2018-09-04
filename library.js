@@ -116,23 +116,21 @@ const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
              answer.forEach(ele=>{
                 readFile(ele)
                 .then((arrObj)=>{
-                    if(options.validate===false&&options.stats===false){
-                        
-                        resolve(arrObj);
-                        
-                        
-                    }else if(options.validate===false&&options.stats===true){
+                    if(options.stats){
                         const answer=answerStats(arrObj);
                         resolve(answer);
-                    }else if(options.validate===true&&options.stats===false){
+                    }else if(options.validate){
                         const answer=answerValidate(arrObj);
                         setTimeout(()=>{
                             resolve(answer);
                         },5000);
                 
-                    }else if(options.validate===true&&options.stats===true){
+                    }else if(options.validate&&options.stats){
                         const answer=answerBoth(arrObj);
                         resolve(answer);
+                    }else{
+                        resolve(arrObj);
+                        
                     }
                 });
             })
@@ -142,20 +140,21 @@ const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
                 console.log('es file');
                 readFile(change)
                 .then((arrObj)=>{
-                    if(options.validate===false&&options.stats===false){
-                        resolve(arrObj);
-                    }else if(options.validate===false&&options.stats===true){
+                    if(options.stats){
                         const answer=answerStats(arrObj);
                         resolve(answer);
-                    }else if(options.validate===true&&options.stats===false){
+                    }else if(options.validate){
                         const answer=answerValidate(arrObj);
                         setTimeout(()=>{
                             resolve(answer);
                         },5000);
-                    }else if(options.validate===true&&options.stats===true){
+                    }else if(options.validate&&options.stats){
                         const answer=answerBoth(arrObj);
                         resolve(answer);
+                    }else{
+                        resolve(arrObj);
                     }
+                
                 });
             }
         }
@@ -191,7 +190,7 @@ if(args[1] === '--validate' && args[2] !== '--stats'){
         console.log(res)
     })
     .catch(error=>{console.log('err')});
-}else if(args[1]==='--validate'&&args[2]==='--stats' || args[1]==='--stats'&&args[2]==='--validate'){
+}else if(args[1]==='--validate'&&args[1]!=='--stats' || args[2]==='--stats'&&args[2]==='--validate'){
     options.stats=true;
     options.validate=true;
     mdlinks(args[0],options)
