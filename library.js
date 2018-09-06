@@ -33,6 +33,7 @@ const readDir = (dir,arrFile)=>{
            arrFile.push(path.resolve(dir, file));
         }
    });
+   console.log(arrFile)
   return arrFile;
 };
 const readFile =(filemd,ar)=>new Promise((resolve,reject)=>{
@@ -66,49 +67,56 @@ const answerStats=(arrObj)=>{
     return obj;
 }
 const validateStatus=(arrlink)=>{
-    const arrPromise=arrlink.map(link=>{
-        return fetch(link);
-    })
-    
-    return Promise.all(arrPromise)
-    .then((res)=>{
-        const arrObjs=res.map((objRes)=>{
-            
-            const obj={
-                href:objRes.url,
-                status:objRes.status,
-            }
-            if(objRes.status === 200){
-                obj.statusText=objRes.statusText;
-            }else{
+    return Promise.all(arrlink.map(link=>{
+        const obj= {
+            href:link,
+        }
+        return fetch(link)
+        .then(response => {
+            if(response.status >= 200 && response.status < 300){
+                obj.statusText = 'OK';
+                return obj
+            } else {
                 obj.statusText='FAIL';
+               return obj
             }
-            return obj
-            
-            
+        }).catch(e => {
+            console.log("message", e.message)
+            if (e){
+               obj.statusText='FAIL';
+               return obj
+            }
         })
-        return arrObjs
-    })
-    .catch(error=>('errr'))
+        
+       
+    }))
 }
-const answerValidate=(arrObj)=>{
-    let arrlink=arrObj.map((obj)=>obj.href);
-    let answer=validateStatus(arrlink);
-    return answer;
 
+const answerValidate=(arr)=>{
+    
+    let arrlink=arr.map((obj)=>obj.href);
+   return validateStatus(arrlink).then(arrayObj =>{ return arrayObj});
+    // return answer;
 }
-const answerBoth=(arrObj)=>{
+const answerBoth=(arr)=>{
+    let fails = 0
+    let ok = 0
+    let arrlink=arr.map((obj)=>obj.href);
+    const uniques=Array.from(new Set(arrlink));
+    validateStatus(arrlink).then(arrayObj => {
+        console.log(arrayObj)
+        arrayObj.forEach(el => {
+            if (el.status == 200) {
+                ok++
+                // ok = ok + 1
+            } else { 
+                fails++
+            }
+        })
+    }).catch(er=>('er'))
     
+    return fails;
     
-    
-    // const arrlink=arrObj.map((obj)=>obj.href);
-    // const uniques=Array.from(new Set(arrlink));
-    // const obj={
-    //     total:arrlink.length,
-    //     unique:uniques.length,
-    //     broken:'falta'
-    // }
-    // return obj;
 }
 const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
     const change= changeAbs(insertPath);
@@ -149,15 +157,15 @@ const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
                         const answer=answerStats(arrObj);
                         resolve(answer);
                     }else if(options.validate&& !options.stats){
-                        const answer=answerValidate(arrObj);
-                        setTimeout(()=>{
-                            resolve(answer);
-                        },5000);
+                        const answer=answerValidate(arrObj).then(res => {
+                            console.log("hopjo", res)
+                        })
+                        
                     }else if(options.validate&&options.stats){
-                        const answer=answerValidate(arrObj);
-                        setTimeout(()=>{
-                            answerBoth(answer)
-                        },5000);
+                        
+                        let answered=answerBoth(arrObj);
+                        // resolve(answered);
+                        
                         
                         
                     }else{
@@ -169,7 +177,7 @@ const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
         }
     })
     .catch((error) => {
-        console.log('errr');
+        console.log('errqr');
     });
 })
 

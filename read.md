@@ -1,6 +1,6 @@
 
-- [Node.js y npm](https://www.genbeta.com/desarrollo/node-)
-- [Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?](http://community.laboratoria.la/t/modulos-librerias-paquetes-frameworks-cual-es-la-diferencia/175)
+- [Node.js y npm](tps://www.genbeta.com/desarrollo/node-)
+- [Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?](http://community.laboratoria.la/t/modulos75)
 - [Módulos(CommonJS)](https://nodejs.org/docs/latest-v0.10.x/api/modules.html)
 - [Semver](https://semver.org/)
 - [Path](https://nodejs.org/api/path.html)

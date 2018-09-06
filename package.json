@@ -23,7 +23,8 @@
     "md-links": "library.js"
   },
   "dependencies": {
-    "markdown-parser": "0.0.8",   
+    "link-check": "^4.4.4",
+    "markdown-parser": "0.0.8",
     "node-fetch": "^2.2.0"
   }
 }
