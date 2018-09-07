@@ -23,18 +23,17 @@ const changeAbs=(insertPath)=>{
 }
 const readDir = (dir,arrFile)=>{
     let  files = fs.readdirSync(dir);
-    arrFile = arrFile || [];
-   files.forEach((file)=>{
+   files.map((file)=>{
        const ext=path.extname(file);
        if (fs.statSync(path.resolve(dir, file)).isDirectory()) {
-           arrFile = readDir(path.resolve(dir, file), arrFile);
+        readDir(path.resolve(dir, file), arrFile);
         }
         else if(ext==='.md'){
            arrFile.push(path.resolve(dir, file));
+          
         }
+        
    });
-   console.log(arrFile)
-  return arrFile;
 };
 const readFile =(filemd,ar)=>new Promise((resolve,reject)=>{
     ar=ar || [];
@@ -75,15 +74,18 @@ const validateStatus=(arrlink)=>{
         .then(response => {
             if(response.status >= 200 && response.status < 300){
                 obj.statusText = 'OK';
+                obj.status=200;
                 return obj
             } else {
                 obj.statusText='FAIL';
+                obj.status=400;
                return obj
             }
         }).catch(e => {
-            console.log("message", e.message)
+            // console.log("message", e.message)
             if (e){
                obj.statusText='FAIL';
+               obj.status=400;
                return obj
             }
         })
@@ -103,19 +105,24 @@ const answerBoth=(arr)=>{
     let ok = 0
     let arrlink=arr.map((obj)=>obj.href);
     const uniques=Array.from(new Set(arrlink));
-    validateStatus(arrlink).then(arrayObj => {
-        console.log(arrayObj)
+    return validateStatus(arrlink).then(arrayObj => {
+        const obj={
+            total:arrlink.length,
+            unique:uniques.length
+        }
         arrayObj.forEach(el => {
-            if (el.status == 200) {
+            if (el.status === 200) {
                 ok++
-                // ok = ok + 1
             } else { 
                 fails++
+                console.log(fails);
             }
         })
+        obj.broken=fails;
+        return obj;
     }).catch(er=>('er'))
     
-    return fails;
+    
     
 }
 const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
@@ -123,16 +130,16 @@ const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
     const stat=util.promisify(fs.lstat);
     stat(change)
     .then(stats=>{
+        let arr=[]
         if(stats.isDirectory()){
-            console.log('es car');
-            const answer=readDir(change);
-             answer.forEach(ele=>{
+             readDir(change,arr);
+              arr.forEach(ele=>{
                 readFile(ele)
                 .then((arrObj)=>{
-                    if(options.stats){
+                    if(options.stats&!options.validate){
                         const answer=answerStats(arrObj);
                         resolve(answer);
-                    }else if(options.validate){
+                    }else if(options.validate&!options.stats){
                         const answer=answerValidate(arrObj);
                         setTimeout(()=>{
                             resolve(answer);
@@ -157,14 +164,16 @@ const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
                         const answer=answerStats(arrObj);
                         resolve(answer);
                     }else if(options.validate&& !options.stats){
-                        const answer=answerValidate(arrObj).then(res => {
-                            console.log("hopjo", res)
+                        answerValidate(arrObj).then(res => {
+                            resolve(res)
                         })
                         
                     }else if(options.validate&&options.stats){
                         
-                        let answered=answerBoth(arrObj);
-                        // resolve(answered);
+                        answerBoth(arrObj).then(res=>{
+                            resolve(res);
+                        });
+                        
                         
                         
                         
