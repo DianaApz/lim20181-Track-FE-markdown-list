@@ -13,52 +13,30 @@ const util = require('util');
 const Parser=require('markdown-parser');
 const parser= new Parser();
 
-const changeAbs=(insertPath)=>{
-    if(path.isAbsolute(insertPath)){
-        return insertPath;
-    } else {
-        const pathAbs= path.resolve(insertPath);
-        return pathAbs
-    }
-}
-const readDir = (dir,arrFile)=>{
-    let  files = fs.readdirSync(dir);
-   files.map((file)=>{
-       const ext=path.extname(file);
-       if (fs.statSync(path.resolve(dir, file)).isDirectory()) {
-        readDir(path.resolve(dir, file), arrFile);
+const answerBoth=(arr)=>{
+    let fails = 0
+    let ok = 0
+    let arrlink=arr.map((obj)=>obj.href);
+    const uniques=Array.from(new Set(arrlink));
+    return validateStatus(arrlink).then(arrayObj => {
+        const obj={
+            total:arrlink.length,
+            unique:uniques.length
         }
-        else if(ext==='.md'){
-           arrFile.push(path.resolve(dir, file));
-          
-        }
-        
-   });
-};
-const readFile =(filemd,ar)=>new Promise((resolve,reject)=>{
-    ar=ar || [];
-    const read=util.promisify(fs.readFile);
-    read(filemd).then(content=>{
-        let string= content.toString();
-        let arrlink=parser.parse(string, (err, result)=> {
-            // console.log(result.references)
-            let all=result.references;
-            all.forEach((obj)=>{
-               ar.push({
-                  href:obj.href,
-                  text:obj.title,
-                  file:filemd
-                })
-            })
-            resolve(ar);
+        arrayObj.forEach(el => {
+            if (el.status === 200) {
+                ok++
+            } else { 
+                fails++
+            }
         })
-    })
-});
+        obj.broken=fails;
+        return obj;
+    }).catch(er=>('er'))
+}
 const answerStats=(arrObj)=>{
     const arrlink=arrObj.map((obj)=>obj.href);
     const uniques=Array.from(new Set(arrlink));
-    
-    
     const obj={
         total:arrlink.length,
         unique:uniques.length
@@ -89,105 +67,115 @@ const validateStatus=(arrlink)=>{
                return obj
             }
         })
-        
-       
     }))
 }
-
 const answerValidate=(arr)=>{
     
     let arrlink=arr.map((obj)=>obj.href);
    return validateStatus(arrlink).then(arrayObj =>{ return arrayObj});
     // return answer;
 }
-const answerBoth=(arr)=>{
-    let fails = 0
-    let ok = 0
-    let arrlink=arr.map((obj)=>obj.href);
-    const uniques=Array.from(new Set(arrlink));
-    return validateStatus(arrlink).then(arrayObj => {
-        const obj={
-            total:arrlink.length,
-            unique:uniques.length
-        }
-        arrayObj.forEach(el => {
-            if (el.status === 200) {
-                ok++
-            } else { 
-                fails++
-                console.log(fails);
-            }
+const getlinksDir=(filemd,arrResult)=>new Promise((resolve,reject)=>{
+    let arrObj=filemd.forEach((md)=>{
+        const content=fs.readFileSync(md);
+        let string= content.toString();
+        let arrlink=parser.parse(string, (err, result)=> {
+            let all=result.references;
+            let resut=all.map((obj)=>{
+                arrResult.push({
+                   href:obj.href,
+                   text:obj.title,
+               })
+            })
+            
+            resolve(arrResult)
         })
-        obj.broken=fails;
-        return obj;
-    }).catch(er=>('er'))
+    })
     
-    
-    
+})
+const readFile =(filemd)=>new Promise((resolve,reject)=>{
+    if(Array.isArray(filemd)){
+       let arrlinks=[];
+       let arrResult=[]
+        getlinksDir(filemd,arrResult)
+        .then(res=>{
+           resolve(res)
+        })
+        .catch(e=>'er')
+    }else{
+        let arrResult=[];
+       const content=fs.readFileSync(filemd);
+       let string= content.toString();
+       let arrlink=parser.parse(string, (err, result)=> {
+        // console.log(result.references)
+           let all=result.references;
+           all.forEach((obj)=>{
+               arrResult.push({
+                   href:obj.href,
+                   text:obj.title,
+                   file:filemd
+               })
+            })
+         resolve(arrResult);
+        })
+    }
+});
+
+const readDir = (dir,arrFile)=>{
+    let  files = fs.readdirSync(dir);
+   files.forEach((file)=>{
+       const ext=path.extname(file);
+       if (fs.statSync(path.resolve(dir, file)).isDirectory()) {
+        readDir(path.resolve(dir, file), arrFile);
+        }
+        else if(ext==='.md'){
+           arrFile.push(path.resolve(dir, file));
+        }
+    });
+};
+const fileorDir=(change)=>{
+    let arr=[];
+    const stat=fs.lstatSync(change);
+    if(stat.isDirectory()){
+        readDir(change,arr)
+       return arr
+    }else if(stat.isFile()){
+        const ext=path.extname(change);
+        if(ext==='.md'){
+          return change;
+        }
+    }
+}
+
+const changeAbs=(insertPath)=>{
+    if(path.isAbsolute(insertPath)){
+        return insertPath;
+    } else {
+        const pathAbs= path.resolve(insertPath);
+        return pathAbs
+    }
 }
 const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
     const change= changeAbs(insertPath);
-    const stat=util.promisify(fs.lstat);
-    stat(change)
-    .then(stats=>{
-        let arr=[]
-        if(stats.isDirectory()){
-             readDir(change,arr);
-              arr.forEach(ele=>{
-                readFile(ele)
-                .then((arrObj)=>{
-                    if(options.stats&!options.validate){
-                        const answer=answerStats(arrObj);
-                        resolve(answer);
-                    }else if(options.validate&!options.stats){
-                        const answer=answerValidate(arrObj);
-                        setTimeout(()=>{
-                            resolve(answer);
-                        },5000);
-                
-                    }else if(options.validate&&options.stats){
-                        const answer=answerBoth(arrObj);
-                        resolve(answer);
-                    }else{
-                        resolve(arrObj);
-                        
-                    }
-                });
+    const chan= fileorDir(change);
+    readFile(chan)
+    .then((arrObj)=>{
+        if(options.stats&& !options.validate){
+            const answer=answerStats(arrObj);
+            resolve(answer);
+        }else if(options.validate&& !options.stats){
+            answerValidate(arrObj).then(res => {
+                resolve(res)
             })
-        } else if(stats.isFile()){
-            const ext=path.extname(change);
-            if(ext==='.md'){
-                console.log('es file');
-                readFile(change)
-                .then((arrObj)=>{
-                    if(options.stats&& !options.validate){
-                        const answer=answerStats(arrObj);
-                        resolve(answer);
-                    }else if(options.validate&& !options.stats){
-                        answerValidate(arrObj).then(res => {
-                            resolve(res)
-                        })
-                        
-                    }else if(options.validate&&options.stats){
-                        
-                        answerBoth(arrObj).then(res=>{
-                            resolve(res);
-                        });
-                        
-                        
-                        
-                        
-                    }else{
-                        resolve(arrObj);
-                    }
-                
-                });
-            }
+        }else if(options.validate&&options.stats){
+            answerBoth(arrObj).then(res=>{
+                resolve(res);
+            });
+        }else{
+            resolve(arrObj);
         }
     })
-    .catch((error) => {
-        console.log('errqr');
-    });
+    .catch(e=>('error'))
 })
 
 if(args[1] === '--validate' && args[2]!=='--stats'){
