@@ -1,8 +1,8 @@
 {
-  "name": "lim20181-track-fe-markdown-list",
+  "name": "@dianaapz/md-links",
   "version": "1.0.0",
   "description": "markdown",
-  "main": "library.js",
+  "main": "cli.js",
   "scripts": {
     "test": "jest --coverage"
   },
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/DianaApz/lim20181-Track-FE-markdown-list#readme",
   "bin": {
-    "md-links": "library.js"
+    "md-links": "cli.js"
   },
   "dependencies": {
     "jest": "^23.6.0",
