@@ -1,4 +1,4 @@
-const mdlinks = require('../library.js');
+const mdlinks = require('../cli.js');
 const options = {
     stats: false,
     validate: false
