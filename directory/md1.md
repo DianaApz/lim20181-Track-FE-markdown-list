@@ -1,1 +1,2 @@
-- [Node.js]
+- [Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?](http://community.laboratoria.la/t/modulos75)
+- [Módulos(CommonJS)](https://nodejs.org/docs/latest-v0.10.x/api/modules.html)

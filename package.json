@@ -4,7 +4,7 @@
   "description": "markdown",
   "main": "library.js",
   "scripts": {
-    "test": "library"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "md-links": "library.js"
   },
   "dependencies": {
+    "jest": "^23.6.0",
     "link-check": "^4.4.4",
     "markdown-parser": "0.0.8",
     "node-fetch": "^2.2.0"

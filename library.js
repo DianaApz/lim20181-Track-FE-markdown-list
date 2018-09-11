@@ -1,21 +1,16 @@
 #!/usr/bin/env node
 const [,, ...args] = process.argv;
 const fetch=require('node-fetch');
-
 let options={
     validate:false,
     stats:false
 }
-
 const path=require('path');
 const fs = require('fs');
-const util = require('util');
 const Parser=require('markdown-parser');
 const parser= new Parser();
-
 const answerBoth=(arr)=>{
     let fails = 0
-    let ok = 0
     let arrlink=arr.map((obj)=>obj.href);
     const uniques=Array.from(new Set(arrlink));
     return validateStatus(arrlink).then(arrayObj => {
@@ -25,7 +20,6 @@ const answerBoth=(arr)=>{
         }
         arrayObj.forEach(el => {
             if (el.status === 200) {
-                ok++
             } else { 
                 fails++
             }
@@ -60,7 +54,6 @@ const validateStatus=(arrlink)=>{
                return obj
             }
         }).catch(e => {
-            // console.log("message", e.message)
             if (e){
                obj.statusText='FAIL';
                obj.status=400;
@@ -70,10 +63,8 @@ const validateStatus=(arrlink)=>{
     }))
 }
 const answerValidate=(arr)=>{
-    
     let arrlink=arr.map((obj)=>obj.href);
    return validateStatus(arrlink).then(arrayObj =>{ return arrayObj});
-    // return answer;
 }
 const getlinksDir=(filemd,arrResult)=>new Promise((resolve,reject)=>{
     let arrObj=filemd.forEach((md)=>{
@@ -87,11 +78,9 @@ const getlinksDir=(filemd,arrResult)=>new Promise((resolve,reject)=>{
                    text:obj.title,
                })
             })
-            
             resolve(arrResult)
         })
     })
-    
 })
 const readFile =(filemd)=>new Promise((resolve,reject)=>{
     if(Array.isArray(filemd)){
@@ -107,7 +96,6 @@ const readFile =(filemd)=>new Promise((resolve,reject)=>{
        const content=fs.readFileSync(filemd);
        let string= content.toString();
        let arrlink=parser.parse(string, (err, result)=> {
-        // console.log(result.references)
            let all=result.references;
            all.forEach((obj)=>{
                arrResult.push({
@@ -120,7 +108,6 @@ const readFile =(filemd)=>new Promise((resolve,reject)=>{
         })
     }
 });
-
 const readDir = (dir,arrFile)=>{
     let  files = fs.readdirSync(dir);
    files.forEach((file)=>{
@@ -146,17 +133,8 @@ const fileorDir=(change)=>{
         }
     }
 }
-
-const changeAbs=(insertPath)=>{
-    if(path.isAbsolute(insertPath)){
-        return insertPath;
-    } else {
-        const pathAbs= path.resolve(insertPath);
-        return pathAbs
-    }
-}
 const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
-    const change= changeAbs(insertPath);
+    const change= path.resolve(insertPath);
     const chan= fileorDir(change);
     readFile(chan)
     .then((arrObj)=>{
@@ -175,19 +153,35 @@ const mdlinks=(insertPath,options)=>new Promise((resolve,reject)=>{
             resolve(arrObj);
         }
     })
-    .catch(e=>('error'))
+    .catch(e=>(console.log(e.code)))
 })
-
-if(args[1] === '--validate' && args[2]!=='--stats'){
+module.exports=mdlinks;
+if(args[0]&&args[1]!=='--validate'&&args[1]!=='--stats'&&args[2]!=='--validate'&&args[2]!=='--stats'){
+    mdlinks(args[0],options)
+    .then(res=>{
+        let answer=res.forEach(obj=>{
+            console.log(`${args[0]}  ${obj.href}   ${obj.text}`);
+        })
+    }).catch(error=>error.code)
+} else if(args[1] === '--validate' && args[2]!=='--stats'){
     options.validate=true;
+    mdlinks(args[0],options)
+    .then(res=>{
+        let answer=res.forEach(obj=>{
+            console.log(`${args[0]} ${obj.href} ${obj.statusText} ${obj.status}`);
+        })
+    }).catch(error=>{})
 }else if(args[1]==='--stats'&& args[2]!=='--validate'){
     options.stats=true;
+    mdlinks(args[0],options)
+    .then(res=>{
+        console.log(`Total: ${res.total} Unique: ${res.unique}`)
+    }).catch(error=>{})
 }else if(args[1]==='--validate'&&args[2]==='--stats'||args[1]==='--stats'&&args[2]==='--validate'){
     options.stats=true;
     options.validate=true;
+    mdlinks(args[0],options)
+    .then(res=>{
+        console.log(`Total: ${res.total} Unique: ${res.unique} Broken: ${res.broken}`)
+    }).catch(error=>{})
 }
-mdlinks(args[0],options)
-.then(res=>{
-    console.log(res)
-})
-.catch(error=>{})
