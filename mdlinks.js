@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 const path = require('path');
 const fs = require('fs');
-const Parser = require('markdown-parser');
+const myMarked = require('marked');
+const renderer =new myMarked.Renderer();
 const fetch = require('node-fetch');
-const parser = new Parser();
+
 const answerBoth = (arr) => {
     let fails = 0
     let arrlink = arr.map((obj) => obj.href);
@@ -65,16 +66,16 @@ const getlinksDir = (filemd, arrResult) => new Promise((resolve, reject) => {
     let arrObj = filemd.forEach((md) => {
         const content = fs.readFileSync(md);
         let string = content.toString();
-        let arrlink = parser.parse(string, (err, result) => {
-            let all = result.references;
-            let resut = all.map((obj) => {
-                arrResult.push({
-                    href: obj.href,
-                    text: obj.title,
-                })
-            })
-            resolve(arrResult)
-        })
+        renderer.link = function(href, title, text) {
+            arrResult.push({
+              href: href,
+              text: text,
+              file:filemd
+            });
+        };
+        myMarked(string,{renderer:renderer})
+        
+        resolve(arrResult);
     })
 })
 const readFile = (filemd) => new Promise((resolve, reject) => {
@@ -89,17 +90,15 @@ const readFile = (filemd) => new Promise((resolve, reject) => {
         let arrResult = [];
         const content = fs.readFileSync(filemd);
         let string = content.toString();
-        let arrlink = parser.parse(string, (err, result) => {
-            let all = result.references;
-            all.forEach((obj) => {
-                arrResult.push({
-                    href: obj.href,
-                    text: obj.title,
-                    file: filemd
-                })
-            })
-            resolve(arrResult);
-        })
+        renderer.link = function(href, title, text) {
+            arrResult.push({
+              href: href,
+              text: text,
+              file:filemd
+            });
+        };
+        myMarked(string,{renderer:renderer})
+        resolve(arrResult);
     }
 });
 const readDir = (dir, arrFile) => {
@@ -137,7 +136,8 @@ const mdlinks = (insertPath, options) => new Promise((resolve, reject) => {
                 resolve(answer);
             } else if (options.validate && !options.stats) {
                 answerValidate(arrObj).then(res => {
-                    resolve(res)
+                    resolve(res);
+                      
                 })
             } else if (options.validate && options.stats) {
                 answerBoth(arrObj).then(res => {
