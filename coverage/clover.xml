@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1536792291744" clover="3.2.0">
-  <project timestamp="1536792291744" name="All files">
+<coverage generated="1536792396711" clover="3.2.0">
+  <project timestamp="1536792396711" name="All files">
     <metrics statements="96" coveredstatements="89" conditionals="32" coveredconditionals="27" methods="32" coveredmethods="28" elements="160" coveredelements="144" complexity="0" loc="96" ncloc="96" packages="1" files="1" classes="1">
       <file name="mdlinks.js" path="C:\Users\Diana Apz\Documents\TRACK\Markdown\lim20181-Track-FE-markdown-list\mdlinks.js">
         <metrics statements="96" coveredstatements="89" conditionals="32" coveredconditionals="27" methods="32" coveredmethods="28"/>

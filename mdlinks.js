@@ -2,7 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const myMarked = require('marked');
-const renderer =new myMarked.Renderer();
+const renderer = new myMarked.Renderer();
 const fetch = require('node-fetch');
 
 const answerBoth = (arr) => {
@@ -66,14 +66,13 @@ const getlinksDir = (filemd, arrResult) => new Promise((resolve, reject) => {
     let arrObj = filemd.forEach((md) => {
         const content = fs.readFileSync(md);
         let string = content.toString();
-        renderer.link = function(href, title, text) {
+        renderer.link = function (href, title, text) {
             arrResult.push({
-              href: href,
-              text: text,
+                href: href,
+                text: text,
             });
         };
-        myMarked(string,{renderer:renderer})
-        console.log(arrResult)
+        myMarked(string, { renderer: renderer })
         resolve(arrResult);
     })
 })
@@ -89,14 +88,14 @@ const readFile = (filemd) => new Promise((resolve, reject) => {
         let arrResult = [];
         const content = fs.readFileSync(filemd);
         let string = content.toString();
-        renderer.link = function(href, title, text) {
+        renderer.link = function (href, title, text) {
             arrResult.push({
-              href: href,
-              text: text,
-              file:filemd
+                href: href,
+                text: text,
+                file: filemd
             });
         };
-        myMarked(string,{renderer:renderer})
+        myMarked(string, { renderer: renderer })
         resolve(arrResult);
     }
 });
@@ -136,7 +135,7 @@ const mdlinks = (insertPath, options) => new Promise((resolve, reject) => {
             } else if (options.validate && !options.stats) {
                 answerValidate(arrObj).then(res => {
                     resolve(res);
-                      
+
                 })
             } else if (options.validate && options.stats) {
                 answerBoth(arrObj).then(res => {
