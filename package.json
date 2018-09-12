@@ -2,7 +2,7 @@
   "name": "@karidia12/mdlinks",
   "version": "1.0.1",
   "description": "markdown",
-  "main": "cli.js",
+  "main": "mdlinks.js",
   "scripts": {
     "test": "jest --coverage"
   },
