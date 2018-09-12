@@ -13,9 +13,9 @@ Para agregar el módulo a su proyecto, ejecute:
 ## Uso de CLI (Línea de comando)
 
 
-`md-links <path-to-file> [options]`
+`md-links <path> [options]`
 
-`<path-file-or-dir>`= ruta de un archivo o de un directorio(carpeta).
+`<path>`= ruta de un archivo o de un directorio(carpeta).
 
 Por ejemplo:
 
