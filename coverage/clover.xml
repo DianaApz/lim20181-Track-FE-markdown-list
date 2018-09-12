@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1536707218478" clover="3.2.0">
-  <project timestamp="1536707218478" name="All files">
+<coverage generated="1536720989643" clover="3.2.0">
+  <project timestamp="1536720989643" name="All files">
     <metrics statements="98" coveredstatements="91" conditionals="32" coveredconditionals="27" methods="34" coveredmethods="30" elements="164" coveredelements="148" complexity="0" loc="98" ncloc="98" packages="1" files="1" classes="1">
-      <file name="mdlinks.js" path="C:\Users\Diana Apz\Documents\TRACK\Markdown\lim20181-Track-FE-markdown-list\mdlinks.js">
+      <file name="mdlinks.js" path="C:\Users\usuario\Documents\reto-track\lim20181-Track-FE-markdown-list\mdlinks.js">
         <metrics statements="98" coveredstatements="91" conditionals="32" coveredconditionals="27" methods="34" coveredmethods="30"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
