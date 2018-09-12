@@ -70,11 +70,10 @@ const getlinksDir = (filemd, arrResult) => new Promise((resolve, reject) => {
             arrResult.push({
               href: href,
               text: text,
-              file:filemd
             });
         };
         myMarked(string,{renderer:renderer})
-        
+        console.log(arrResult)
         resolve(arrResult);
     })
 })

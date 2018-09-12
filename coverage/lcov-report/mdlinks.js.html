@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">93.33% </span>
+        <span class="strong">93.2% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>98/105</span>
+        <span class='fraction'>96/103</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">84.38% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>27/32</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">88.24% </span>
+        <span class="strong">87.5% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>30/34</span>
+        <span class='fraction'>28/32</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">92.86% </span>
+        <span class="strong">92.71% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>91/98</span>
+        <span class='fraction'>89/96</span>
       </div>
     </div>
   </div>
@@ -193,14 +193,13 @@
 148
 149
 150
-151
-152
-153</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+151</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -263,20 +262,18 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -288,8 +285,6 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -297,7 +292,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -337,6 +332,7 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -348,164 +344,162 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">#!/usr/bin/env node
-const path=require('path');
+const path = require('path');
 const fs = require('fs');
-const Parser=require('markdown-parser');
-const fetch=require('node-fetch');
-const parser= new Parser();
-const answerBoth=(arr)=&gt;{
+const myMarked = require('marked');
+const renderer =new myMarked.Renderer();
+const fetch = require('node-fetch');
+&nbsp;
+const answerBoth = (arr) =&gt; {
     let fails = 0
-    let arrlink=arr.map((obj)=&gt;obj.href);
-    const uniques=Array.from(new Set(arrlink));
+    let arrlink = arr.map((obj) =&gt; obj.href);
+    const uniques = Array.from(new Set(arrlink));
     return validateStatus(arrlink).then(arrayObj =&gt; {
-        const obj={
-            total:arrlink.length,
-            unique:uniques.length
+        const obj = {
+            total: arrlink.length,
+            unique: uniques.length
         }
         arrayObj.forEach(el =&gt; {
             if (el.status === 200) {
-            } else { 
+            } else {
                 fails++
             }
         })
-        obj.broken=fails;
+        obj.broken = fails;
         return obj;
-    }).catch(<span class="fstat-no" title="function not covered" >er</span>=&gt;(<span class="cstat-no" title="statement not covered" >'er')</span>)
+    }).catch(<span class="fstat-no" title="function not covered" >er</span> =&gt; (<span class="cstat-no" title="statement not covered" >'er')</span>)
 }
-const answerStats=(arrObj)=&gt;{
-    const arrlink=arrObj.map((obj)=&gt;obj.href);
-    const uniques=Array.from(new Set(arrlink));
-    const obj={
-        total:arrlink.length,
-        unique:uniques.length
+const answerStats = (arrObj) =&gt; {
+    const arrlink = arrObj.map((obj) =&gt; obj.href);
+    const uniques = Array.from(new Set(arrlink));
+    const obj = {
+        total: arrlink.length,
+        unique: uniques.length
     }
     return obj;
 }
-const validateStatus=(arrlink)=&gt;{
-    return Promise.all(arrlink.map(link=&gt;{
-        const obj= {
-            href:link,
+const validateStatus = (arrlink) =&gt; {
+    return Promise.all(arrlink.map(link =&gt; {
+        const obj = {
+            href: link,
         }
         return fetch(link)
-        .then(response =&gt; {
-            if(response.status &gt;= 200 &amp;&amp; response.status &lt; 300){
-                obj.statusText = 'OK';
-                obj.status=200;
-                return obj
-            } else {
-                obj.statusText='FAIL';
-                obj.status=400;
-               return obj
-            }
-        }).catch(<span class="fstat-no" title="function not covered" >e </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >            if (e){</span>
-<span class="cstat-no" title="statement not covered" >               obj.statusText='FAIL';</span>
-<span class="cstat-no" title="statement not covered" >               obj.status=400;</span>
-<span class="cstat-no" title="statement not covered" >               return obj</span>
-            }
-        })
+            .then(response =&gt; {
+                if (response.status &gt;= 200 &amp;&amp; response.status &lt; 300) {
+                    obj.statusText = 'OK';
+                    obj.status = 200;
+                    return obj
+                } else {
+                    obj.statusText = 'FAIL';
+                    obj.status = 400;
+                    return obj
+                }
+            }).catch(<span class="fstat-no" title="function not covered" >e </span>=&gt; {
+<span class="cstat-no" title="statement not covered" >                if (e) {</span>
+<span class="cstat-no" title="statement not covered" >                    obj.statusText = 'FAIL';</span>
+<span class="cstat-no" title="statement not covered" >                    obj.status = 400;</span>
+<span class="cstat-no" title="statement not covered" >                    return obj</span>
+                }
+            })
     }))
 }
-const answerValidate=(arr)=&gt;{
-    let arrlink=arr.map((obj)=&gt;obj.href);
-   return validateStatus(arrlink).then(arrayObj =&gt;{ return arrayObj});
+const answerValidate = (arr) =&gt; {
+    let arrlink = arr.map((obj) =&gt; obj.href);
+    return validateStatus(arrlink).then(arrayObj =&gt; { return arrayObj });
 }
-const getlinksDir=(filemd,arrResult)=&gt;new Promise((resolve,reject)=&gt;{
-    let arrObj=filemd.forEach((md)=&gt;{
-        const content=fs.readFileSync(md);
-        let string= content.toString();
-        let arrlink=parser.parse(string, (err, result)=&gt; {
-            let all=result.references;
-            let resut=all.map((obj)=&gt;{
-                arrResult.push({
-                   href:obj.href,
-                   text:obj.title,
-               })
-            })
-            resolve(arrResult)
-        })
+const getlinksDir = (filemd, arrResult) =&gt; new Promise((resolve, reject) =&gt; {
+    let arrObj = filemd.forEach((md) =&gt; {
+        const content = fs.readFileSync(md);
+        let string = content.toString();
+        renderer.link = function(href, title, text) {
+            arrResult.push({
+              href: href,
+              text: text,
+            });
+        };
+        myMarked(string,{renderer:renderer})
+        console.log(arrResult)
+        resolve(arrResult);
     })
 })
-const readFile =(filemd)=&gt;new Promise((resolve,reject)=&gt;{
-    if(Array.isArray(filemd)){
-       let arrlinks=[];
-       let arrResult=[]
-        getlinksDir(filemd,arrResult)
-        .then(res=&gt;{
-           resolve(res)
-        })
-        .catch(<span class="fstat-no" title="function not covered" >e=</span>&gt;<span class="cstat-no" title="statement not covered" >'er')</span>
-    }else{
-        let arrResult=[];
-       const content=fs.readFileSync(filemd);
-       let string= content.toString();
-       let arrlink=parser.parse(string, (err, result)=&gt; {
-           let all=result.references;
-           all.forEach((obj)=&gt;{
-               arrResult.push({
-                   href:obj.href,
-                   text:obj.title,
-                   file:filemd
-               })
+const readFile = (filemd) =&gt; new Promise((resolve, reject) =&gt; {
+    if (Array.isArray(filemd)) {
+        let arrResult = []
+        getlinksDir(filemd, arrResult)
+            .then(res =&gt; {
+                resolve(res)
             })
-         resolve(arrResult);
-        })
+            .catch(<span class="fstat-no" title="function not covered" >e </span>=&gt; <span class="cstat-no" title="statement not covered" >'er')</span>
+    } else {
+        let arrResult = [];
+        const content = fs.readFileSync(filemd);
+        let string = content.toString();
+        renderer.link = function(href, title, text) {
+            arrResult.push({
+              href: href,
+              text: text,
+              file:filemd
+            });
+        };
+        myMarked(string,{renderer:renderer})
+        resolve(arrResult);
     }
 });
-const readDir = (dir,arrFile)=&gt;{
-    let  files = fs.readdirSync(dir);
-   files.forEach((file)=&gt;{
-       const ext=path.extname(file);
-       if (fs.statSync(path.resolve(dir, file)).isDirectory()) {
-        readDir(path.resolve(dir, file), arrFile);
+const readDir = (dir, arrFile) =&gt; {
+    let files = fs.readdirSync(dir);
+    files.forEach((file) =&gt; {
+        const ext = path.extname(file);
+        if (fs.statSync(path.resolve(dir, file)).isDirectory()) {
+            readDir(path.resolve(dir, file), arrFile);
         }
-        else <span class="missing-if-branch" title="else path not taken" >E</span>if(ext==='.md'){
-           arrFile.push(path.resolve(dir, file));
+        else <span class="missing-if-branch" title="else path not taken" >E</span>if (ext === '.md') {
+            arrFile.push(path.resolve(dir, file));
         }
     });
 };
-const fileorDir=(change)=&gt;{
-    let arr=[];
-    const stat=fs.lstatSync(change);
-    if(stat.isDirectory()){
-        readDir(change,arr)
-       return arr
-    }else <span class="missing-if-branch" title="else path not taken" >E</span>if(stat.isFile()){
-        const ext=path.extname(change);
-        <span class="missing-if-branch" title="else path not taken" >E</span>if(ext==='.md'){
-          return change;
+const fileorDir = (change) =&gt; {
+    let arr = [];
+    const stat = fs.lstatSync(change);
+    if (stat.isDirectory()) {
+        readDir(change, arr)
+        return arr
+    } else <span class="missing-if-branch" title="else path not taken" >E</span>if (stat.isFile()) {
+        const ext = path.extname(change);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (ext === '.md') {
+            return change;
         }
     }
 }
-const mdlinks=(insertPath,options)=&gt;new Promise((resolve,reject)=&gt;{
-    const change= path.resolve(insertPath);
-    const chan= fileorDir(change);
+const mdlinks = (insertPath, options) =&gt; new Promise((resolve, reject) =&gt; {
+    const change = path.resolve(insertPath);
+    const chan = fileorDir(change);
     readFile(chan)
-    .then((arrObj)=&gt;{
-        if(options.stats&amp;&amp; !options.validate){
-            const answer=answerStats(arrObj);
-            resolve(answer);
-        }else if(options.validate&amp;&amp; !options.stats){
-            answerValidate(arrObj).then(res =&gt; {
-                resolve(res)
-            })
-        }else if(options.validate&amp;&amp;options.stats){
-            answerBoth(arrObj).then(res=&gt;{
-                resolve(res);
-            });
-        }else{
-            resolve(arrObj);
-        }
-    })
-    .catch(<span class="fstat-no" title="function not covered" >e=</span>&gt;(<span class="cstat-no" title="statement not covered" >e.code)</span>)
+        .then((arrObj) =&gt; {
+            if (options.stats &amp;&amp; !options.validate) {
+                const answer = answerStats(arrObj);
+                resolve(answer);
+            } else if (options.validate &amp;&amp; !options.stats) {
+                answerValidate(arrObj).then(res =&gt; {
+                    resolve(res);
+                      
+                })
+            } else if (options.validate &amp;&amp; options.stats) {
+                answerBoth(arrObj).then(res =&gt; {
+                    resolve(res);
+                });
+            } else {
+                resolve(arrObj);
+            }
+        })
+        .catch(<span class="fstat-no" title="function not covered" >e </span>=&gt; (<span class="cstat-no" title="statement not covered" >e.message)</span>)
 })
-module.exports=mdlinks;</pre></td></tr>
+module.exports = mdlinks;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Sep 11 2018 21:56:29 GMT-0500 (GMT-05:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Sep 12 2018 17:44:51 GMT-0500 (Hora est. Pacífico, Sudamérica)
 </div>
 </div>
 <script src="prettify.js"></script>

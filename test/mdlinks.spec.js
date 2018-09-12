@@ -4,18 +4,18 @@ const path = require('path');
 test('Para archivos debería retornar un arreglo de objetos (solo path)', () => {
     options.validate = false;
     options.stats = false;
-    return mdlinks('read.md', options)
+    return mdlinks('prueba-test.md', options)
         .then((res) => {
             expect(res).toEqual(
                 [{
                     href: 'http://community.laboratoria.la/t/modulos75',
-                    text: 'Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?',
-                    file: path.resolve('read.md')
+                    text: 'Módulos, librerías, paquetes y frameworks',
+                    file: path.resolve('prueba-test.md')
                 },
                 {
                     href: 'https://nodejs.org/docs/latest-v0.10.x/api/modules.html',
                     text: 'Módulos(CommonJS)',
-                    file: path.resolve('read.md')
+                    file: path.resolve('prueba-test.md')
                 }
                 ]
             )
@@ -24,7 +24,7 @@ test('Para archivos debería retornar un arreglo de objetos (solo path)', () => 
 test('Para archivos debería retornar un arreglo de objeto (solo validate)', () => {
     options.validate = true;
     options.stats = false;
-    return mdlinks('read.md', options)
+    return mdlinks('prueba-test.md', options)
         .then((res) => {
             expect(res).toEqual(
                 [{
@@ -43,7 +43,7 @@ test('Para archivos debería retornar un arreglo de objeto (solo validate)', () 
 test('Para archivos debería retornar un objeto (solo stats)', () => {
     options.stats = true;
     options.validate = false;
-    return mdlinks('read.md', options)
+    return mdlinks('prueba-test.md', options)
         .then((res) => {
             expect(res).toEqual({ total: 2, unique: 2 });
         });
@@ -52,7 +52,7 @@ test('Para archivos debería retornar un objeto (validate y stats)', () => {
     options.validate = true;
     options.stats = true;
 
-    return mdlinks('read.md', options)
+    return mdlinks('prueba-test.md', options)
         .then((res) => {
             expect(res).toEqual({ total: 2, unique: 2, broken: 1 });
         });
@@ -66,15 +66,15 @@ test('Para carpeta debería retornar un arreglo de objetos (solo path)', () => {
             expect(res).toEqual(
                 [{
                     "href": "https://nodejs.org/api/fsjkhjkhkhtml",
-                    "text": "File System"
+                    "text": "File System",
                 },
                 {
                     "href": "http://community.laboratoria.la/t/modulos75",
-                    "text": "Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?"
+                    "text": "Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?",
                 },
                 {
                     "href": "https://nodejs.org/docs/latest-v0.10.x/api/modules.html",
-                    "text": "Módulos(CommonJS)"
+                    "text": "Módulos(CommonJS)",
                 }]
             )
         })
