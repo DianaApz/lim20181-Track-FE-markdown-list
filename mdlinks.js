@@ -111,23 +111,23 @@ const readDir = (dir, arrFile) => {
         }
     });
 };
-const fileorDir = (change) => {
+const fileorDir = (identifyPath) => {
     let arr = [];
-    const stat = fs.lstatSync(change);
+    const stat = fs.lstatSync(identifyPath);
     if (stat.isDirectory()) {
-        readDir(change, arr)
+        readDir(identifyPath, arr)
         return arr
     } else if (stat.isFile()) {
-        const ext = path.extname(change);
+        const ext = path.extname(identifyPath);
         if (ext === '.md') {
-            return change;
+            return identifyPath;
         }
     }
 }
 const mdlinks = (insertPath, options) => new Promise((resolve, reject) => {
-    const change = path.resolve(insertPath);
-    const chan = fileorDir(change);
-    readFile(chan)
+    const currentPath = path.resolve(insertPath);
+    const identifyPath= fileorDir(currentPath);
+    readFile(identifyPath)
         .then((arrObj) => {
             if (options.stats && !options.validate) {
                 const answer = answerStats(arrObj);
