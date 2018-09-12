@@ -79,7 +79,6 @@ const getlinksDir = (filemd, arrResult) => new Promise((resolve, reject) => {
 })
 const readFile = (filemd) => new Promise((resolve, reject) => {
     if (Array.isArray(filemd)) {
-        let arrlinks = [];
         let arrResult = []
         getlinksDir(filemd, arrResult)
             .then(res => {
