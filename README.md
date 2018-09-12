@@ -10,12 +10,12 @@ Para agregar el módulo a su proyecto, ejecute:
 `npm install DianaApz/lim20181-Track-FE-markdown-list`
 
 
-## Uso CLI (Línea de comando)
+## Uso de CLI (Línea de comando)
 
 
 `md-links <path-to-file> [options]`
 
-<path-file-or-dir> ruta de un archivo o de un directorio.
+`<path-file-or-dir>`= ruta de un archivo o de un directorio(carpeta).
 
 Por ejemplo:
 
@@ -47,8 +47,7 @@ básicas sobre los links como el total y los links únicos.
 
 ```sh
 $ md-links read.md --stats
-Total: 2
-Unique: 2
+Total: 2  Unique: 2
 ```
 
 También podemos combinar `--stats` y `--validate` para obtener estadísticas que
@@ -56,9 +55,7 @@ necesiten de los resultados de la validación como total, únicos y links rotos.
 
 ```sh
 $ md-links read.md --stats --validate
-Total: 2
-Unique: 2
-Broken: 1
+Total: 2  Unique: 2  Broken: 1
 ```
 
 
