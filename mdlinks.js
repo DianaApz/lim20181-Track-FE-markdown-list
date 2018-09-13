@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 
 const answerBoth = (arr) => {
     let fails = 0
-    let arrlink = arr.map((obj) => obj.href);
+    const arrlink = arr.map((obj) => obj.href);
     const uniques = Array.from(new Set(arrlink));
     return validateStatus(arrlink).then(arrayObj => {
         const obj = {
@@ -33,8 +33,8 @@ const answerStats = (arrObj) => {
     }
     return obj;
 }
-const validateStatus = (arrlink) => {
-    return Promise.all(arrlink.map(link => {
+const validateStatus = (arrlink) =>
+    Promise.all(arrlink.map(link => {
         const obj = {
             href: link,
         }
@@ -50,23 +50,22 @@ const validateStatus = (arrlink) => {
                     return obj
                 }
             }).catch(e => {
-                if (e) {
-                    obj.statusText = 'FAIL';
-                    obj.status = 400;
-                    return obj
-                }
+                obj.statusText = 'FAIL';
+                obj.status = 400;
+                return obj
+                
             })
     }))
-}
+
 const answerValidate = (arr) => {
-    let arrlink = arr.map((obj) => obj.href);
-    return validateStatus(arrlink).then(arrayObj => { return arrayObj });
+    const arrlink = arr.map((obj) => obj.href);
+    return validateStatus(arrlink).then(arrayObj => arrayObj);
 }
 const getlinksDir = (filemd, arrResult) => new Promise((resolve, reject) => {
-    let arrObj = filemd.forEach((md) => {
+    const arrObj = filemd.forEach((md) => {
         const content = fs.readFileSync(md);
-        let string = content.toString();
-        renderer.link = function (href, title, text) {
+        const string = content.toString();
+        renderer.link = (href, title, text) => {
             arrResult.push({
                 href: href,
                 text: text,
@@ -87,8 +86,8 @@ const readFile = (filemd) => new Promise((resolve, reject) => {
     } else {
         let arrResult = [];
         const content = fs.readFileSync(filemd);
-        let string = content.toString();
-        renderer.link = function (href, title, text) {
+        const string = content.toString();
+        renderer.link = (href, title, text) => {
             arrResult.push({
                 href: href,
                 text: text,
@@ -100,7 +99,7 @@ const readFile = (filemd) => new Promise((resolve, reject) => {
     }
 });
 const readDir = (dir, arrFile) => {
-    let files = fs.readdirSync(dir);
+    const files = fs.readdirSync(dir);
     files.forEach((file) => {
         const ext = path.extname(file);
         if (fs.statSync(path.resolve(dir, file)).isDirectory()) {
@@ -126,7 +125,7 @@ const fileorDir = (identifyPath) => {
 }
 const mdlinks = (insertPath, options) => new Promise((resolve, reject) => {
     const currentPath = path.resolve(insertPath);
-    const identifyPath= fileorDir(currentPath);
+    const identifyPath = fileorDir(currentPath);
     readFile(identifyPath)
         .then((arrObj) => {
             if (options.stats && !options.validate) {

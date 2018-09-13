@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const [, , ...args] = process.argv;
-const mdlinks = require('./mdlinks.js')
+const mdlinks = require('./mdlinks.js');
 let options = {
     validate: false,
     stats: false
@@ -8,7 +8,7 @@ let options = {
 if (args[0] && args[1] !== '--validate' && args[1] !== '--stats' && args[2] !== '--validate' && args[2] !== '--stats') {
     mdlinks(args[0], options)
         .then(res => {
-            let answer = res.forEach(obj => {
+            res.forEach(obj => {
                 console.log(`${args[0]}  ${obj.href}   ${obj.text}`);
             })
         }).catch(error =>error.message)
@@ -16,7 +16,7 @@ if (args[0] && args[1] !== '--validate' && args[1] !== '--stats' && args[2] !== 
     options.validate = true;
     mdlinks(args[0], options)
         .then(res => {
-            let answer = res.forEach(obj => {
+            res.forEach(obj => {
                 console.log(`${args[0]} ${obj.href} ${obj.statusText} ${obj.status}`);
             })
         }).catch(error =>error.message)

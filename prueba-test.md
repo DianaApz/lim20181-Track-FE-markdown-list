@@ -1,2 +1,3 @@
 - [Módulos, librerías, paquetes y frameworks](http://community.laboratoria.la/t/modulos75)
 - [Módulos(CommonJS)](https://nodejs.org/docs/latest-v0.10.x/api/modules.html)
+- [Módulos, librerías, paquetes y frameworks](hsfgdfsgfs://community.laboratoria.la/t/modulos75)
